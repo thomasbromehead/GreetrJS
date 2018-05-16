@@ -1,7 +1,7 @@
 (function(global, $){
 
-   var Greeter = function(firstName, lastName, language){
-      return new Greeter.init(firstName, lastName, language);
+   var Greetr = function(firstName, lastName, language){
+      return new Greetr.init(firstName, lastName, language);
    }
    //This never gets exposed, brought into Greetr.init through closure.
    var supportedLangs = ['en', 'es'];
@@ -25,27 +25,28 @@
    //Add methods exposed inside the prototype. 
    //"This" keyword inside init will point to this prototype.
    // Adding methods here save memory and power.
-   Greeter.prototype = {
-      fullName: function(){
+   Greetr.prototype = {
+
+      fullName: function() {
          return this.firstName + ' ' + this.lastName;
       },
 
-      validate: function(){
+      validate: function() {
          //"this" refers to the object that's calling the function. Will look at its own language through reflection.
          if (supportedLangs.indexOf(this.language) === -1) {
             throw "Invalid language";
          }
       },
 
-      greeting: function(){
+      greeting: function() {
          return greetings[this.language] + ' ' + this.firstName + '!';
       },
 
-      formalGreeting: function(){
+      formalGreeting: function() {
          return formalGreetings[this.language] + ' ' + this.fullName();
       },
 
-      greet: function(formal){
+      greet: function(formal) {
          var msg;
 
          //if undefined or null it will be coerced to 'false'
@@ -66,7 +67,7 @@
       
       log: function() {
          if(console) {
-            console.log(logMessages[this.language] + ': ' + this.fullName())
+            console.log(logMessages[this.language] + ': ' + this.fullName());
          }
          //Make it chainable
          return this;
@@ -84,16 +85,17 @@
 
    };
 
-   Greeter.init = function(firstName, lastName, language){
+   Greetr.init = function(firstName, lastName, language){
       var self = this;
       self.firstName = firstName || "John";
       self.lastName = lastName || "Doe";
       self.language = language || "en";
    }
    //Set prototype of returned object equal to constructor's prototype
-   Greetr.prototype = Greetr.init.prototype;
+   //Only works in this way, opposite generates an error.
+   Greetr.init.prototype = Greetr.prototype;
 
    //Expose G$ to the window object, shorthand for calling Greetr
    global.Greetr = global.G$ = Greetr;
 
-}(window, $));
+}(window, jQuery));
